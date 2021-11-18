@@ -7,6 +7,7 @@
 
 import UIKit
 import SwiftSoup
+//var max:Int=18
 class XxhdtTableViewController: UITableViewController {
     var xxhdt:[TableCell]=[]
     let base_url:String="https://itsc.nju.edu.cn/wlyxqk/list"
@@ -35,8 +36,8 @@ class XxhdtTableViewController: UITableViewController {
                     let document = try SwiftSoup.parse(string)
                     let pages_el: Element = try document.select("em.all_pages").first()!
                     self.max_page = Int(try pages_el.text()) ?? 0
-                    max=Int(try pages_el.text()) ?? 0
-                    print("in", max)
+                    //max=Int(try pages_el.text()) ?? 0
+                    //print("in", max)
                     //print("before",self.max_page)
 //                    return self.max_page
                     
@@ -115,7 +116,24 @@ class XxhdtTableViewController: UITableViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        downhtml(pageNum: 0)
+        //downhtml(pageNum: 0)
+        let operationqueue=OperationQueue()
+        operationqueue.maxConcurrentOperationCount=1
+        let blockop1=BlockOperation{
+            self.get_max_page()
+            //print("i am here",max)
+            
+        }
+        let blockop2=BlockOperation{
+            //print("block",max)
+            for j in 0..<18 {
+                print(j)
+                self.downhtml(pageNum:j)
+            }
+        }
+        blockop2.addDependency(blockop1)
+        operationqueue.addOperation(blockop1)
+        operationqueue.addOperation(blockop2)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 

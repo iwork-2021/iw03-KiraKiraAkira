@@ -7,13 +7,13 @@
 
 import UIKit
 import SwiftSoup
-var max:Int=0
+var max:Int=9
 class XwdtTableViewController: UITableViewController {
     var xwdt:[TableCell]=[]
     let base_url:String="https://itsc.nju.edu.cn/xwdt/list"
     var html_page:String=""
     var cur_page:Int=1
-    var max_page:Int = 18
+    var max_page:Int = 9
 
     func get_max_page(){
         let url_str=base_url+"1.htm"
@@ -126,7 +126,7 @@ class XwdtTableViewController: UITableViewController {
         }
         let blockop2=BlockOperation{
             print("block",max)
-            for j in 0..<18 {
+            for j in 0..<max {
                 print(j)
                 self.downhtml(pageNum:j)
             }

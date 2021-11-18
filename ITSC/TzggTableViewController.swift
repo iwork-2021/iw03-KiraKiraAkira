@@ -7,12 +7,13 @@
 
 import UIKit
 import SwiftSoup
+//var max:Int=39
 class TzggTableViewController: UITableViewController {
     var tzgg:[TableCell]=[]
     let base_url:String="https://itsc.nju.edu.cn/tzgg/list"
     var html_page:String=""
     var cur_page:Int=1
-    var max_page:Int = 18
+    var max_page:Int = 39
 
     func get_max_page(){
         let url_str=base_url+"1.htm"
@@ -113,7 +114,24 @@ class TzggTableViewController: UITableViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.downhtml(pageNum: 1)
+        //self.downhtml(pageNum: 1)
+        let operationqueue=OperationQueue()
+        operationqueue.maxConcurrentOperationCount=1
+        let blockop1=BlockOperation{
+            self.get_max_page()
+            print("i am here",max)
+            
+        }
+        let blockop2=BlockOperation{
+            print("block",max)
+            for j in 0..<39 {
+                print(j)
+                self.downhtml(pageNum:j)
+            }
+        }
+        blockop2.addDependency(blockop1)
+        operationqueue.addOperation(blockop1)
+        operationqueue.addOperation(blockop2)
 //        let operationqueue=OperationQueue()
 //        operationqueue.maxConcurrentOperationCount=1
 //        let blockop1=BlockOperation{
